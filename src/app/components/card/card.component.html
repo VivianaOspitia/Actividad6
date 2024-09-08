@@ -1,10 +1,18 @@
-<div class="card" style="width: 18rem;margin:1rem">
-    <img src="{{datos.image}}" class="card-img-top" alt="...">
-    <div class="card-body">
-        <h5 class="card-title">{{datos.first_name}} {{datos.last_name}}</h5>
-        <p class="card-text">
-            {{datos.email}}
-        </p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card" style="width: 100%">
+                <img src="{{datos.image}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{datos.first_name}} {{datos.last_name}}</h5>
+                    <p class="card-text">{{datos.email}}</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info" a [routerLink]="['/user', datos.id]">Ver Detalle</button>
+                    <button class="btn btn-primary">Actualizar</button>
+                    <button class="btn btn-danger">Borrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<button a [routerLink]="['/user', datos.id]">ver</button>
