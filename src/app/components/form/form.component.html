@@ -1,9 +1,31 @@
 <div>
-    <form [formGroup]="modelForm" class="card p-3" (ngSubmit)="getDataForm()">
+    {{modelForm.valid}}
+    <form [formGroup]="modelForm" class="card p-3 shadow" (ngSubmit)="getDataForm()" novalidate>
         <div class="my-2 container">
             <label for="name" class="form-label">Nombre Usuario</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" formControlName="name" id="name">
+            @if(modelForm.get('name')?.hasError('required') && modelForm.get('name')?.touched){
+            <p class="error">Campo requerido</p>
+            }
         </div>
+
+        <div class="my-2 container">
+            <label for="lastname" class="form-label">Apellido Usuario</label>
+            <input type="text" class="form-control" formControlName="lastname" id="lastname">
+        </div>
+
+        <div class="my-2 container">
+            <label for="email" class="form-label">Email Usuario</label>
+            <input type="email" class="form-control" formControlName="email" id="email">
+        </div>
+
+        <div class="my-2 container">
+            <label for="image" class="form-label">Imagen Usuario</label>
+            <input type="text" class="form-control" formControlName="image" id="image">
+        </div>
+
+        <input type="submit" class="btn btn-danger" value="Guardar" [disabled]="modelForm.valid">
+        
     </form>
 
 </div>
