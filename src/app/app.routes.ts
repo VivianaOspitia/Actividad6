@@ -22,5 +22,10 @@ export const routes: Routes = [
     {
         path: 'user/:id',
         component: UserDetailsComponent
-    }
+    },
+    {
+        path: 'updateuser/:id',
+        component: FormComponent,
+        title: 'Actualizar un usuario'
+    },
 ];

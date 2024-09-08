@@ -46,9 +46,18 @@ export class UsersService {
     })
     return await response.json();
   }
+
+  async updateUser(updatedUser:UsersData){
+    //el servicio user/IDUSUARIO, siempre devuelve el mismo mensaje
+    const response = await fetch(this.url+'/'+updatedUser.id,{
+      method : 'PUT',
+      body: JSON.stringify(updatedUser)
+    })
+    return await response.json();
+  }
 }
 
 interface ApiResponse {
-  results: any[]; // Adjust the type here based on what the array contains
-  [key: string]: any; // In case there are other fields in the response
+  results: any[]; 
+  [key: string]: any;
 }

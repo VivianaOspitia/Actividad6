@@ -1,8 +1,9 @@
-import { Component,inject } from '@angular/core';
+import { Component,Input,inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UsersService } from '../../services/users.service';
 import { UsersData } from '../../interfaces/users-data';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -12,10 +13,14 @@ import { UsersData } from '../../interfaces/users-data';
   styleUrl: './form.component.css'
 })
 export class FormComponent {
+  resourceData: number = -1;
+  sumitLabel = 'Guardar';
+  user : UsersData |undefined;
   modelForm: FormGroup;
   usersService : UsersService = inject(UsersService);
+  isEditMode: boolean = false;
 
-  constructor(){
+  constructor(private activatedRoute: ActivatedRoute){
     this.modelForm = new FormGroup({
       name: new FormControl(null, [
         Validators.required,
@@ -33,6 +38,16 @@ export class FormComponent {
         Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/),
       ]),
     }, [])
+
+    this.activatedRoute.paramMap.subscribe((parametros: ParamMap) => {
+      this.resourceData = parseInt(parametros.get("id")!)
+      this.usersService.getUserFromList(this.resourceData).then(fetchUser=> {
+        this.user= fetchUser
+        this.isEditMode = true;
+        this.loadResourceData();
+        this.sumitLabel = "Actualizar";
+      });
+    })
   }
 
   getDataForm(){
@@ -44,14 +59,32 @@ export class FormComponent {
       email: this.modelForm.controls['email'].value,
       image: this.modelForm.controls['image'].value
     };
-    this.usersService.createUser(newUser).then(res =>{
-      Swal.fire('Se creo!', res.id, 'success')
-    })
-    
+    if(this.isEditMode){
+      this.usersService.updateUser(newUser).then(res =>{
+        if (res.error === undefined || res.error ===null){
+          Swal.fire('Se actualizo!', '', 'success')
+        }else{
+          Swal.fire('Error!', res.error, 'error')
+        }    
+      })
+
+    }else{
+      this.usersService.createUser(newUser).then(res =>{
+        Swal.fire('Se creo!', res.id, 'success')
+      })
+    }
   }
 
   checkControl(formControlName: string, validador: string){
     return this.modelForm.get(formControlName)?.hasError(validador) && this.modelForm.get(formControlName)?.touched;
   }
 
+  loadResourceData(): void {
+    this.modelForm.patchValue({
+      name : this.user?.first_name,
+      lastname : this.user?.last_name,
+      email : this.user?.email,
+      image : this.user?.image
+    });
+  }
 }
