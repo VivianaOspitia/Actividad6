@@ -6,7 +6,7 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: '/newuser', 
+        redirectTo: '/home', 
         pathMatch: 'full' 
     },
     {

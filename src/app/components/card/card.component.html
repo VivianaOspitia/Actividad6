@@ -9,8 +9,8 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-info" a [routerLink]="['/user', datos.id]">Ver Detalle</button>
-                    <button class="btn btn-primary">Actualizar</button>
-                    <button class="btn btn-danger">Borrar</button>
+                    <button class="btn btn-primary"  a [routerLink]="['/updateuser', datos.id]">Actualizar</button>
+                    <button class="btn btn-danger" (click)="startDelete(datos.id)">Borrar</button>
                 </div>
             </div>
         </div>
