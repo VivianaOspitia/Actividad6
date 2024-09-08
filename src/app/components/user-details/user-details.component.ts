@@ -2,6 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import Swal from 'sweetalert2';
 import { UsersData } from '../../interfaces/users-data';
 import { UsersService } from '../../services/users.service';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-user-details',
@@ -12,27 +13,36 @@ import { UsersService } from '../../services/users.service';
 })
 export class UserDetailsComponent {
   user : UsersData |undefined;
-  usersService : UsersService = inject(UsersService) 
+  usersService : UsersService = inject(UsersService);
+  id : number = 0;
 
-  @Input()
-  set id(heroId: number) {
-     console.log("*********************ingresa al input")
-     this.usersService.getUserFromList(this.id).then((fetchUser=> this.user= fetchUser);
+  constructor (private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.paramMap.subscribe((parametros: ParamMap) => {
+      this.id = parseInt(parametros.get("id")!)
+      this.usersService.getUserFromList(this.id).then(fetchUser=> this.user= fetchUser);
+    })
   }
-
+  
   startDelete(id: number) {
     Swal.fire({
       title: '¿Quieres borrar a '+this.user?.email+'?',
       showDenyButton: true,
       showCancelButton: true,
-      confirmButtonText: 'Save',
-      denyButtonText: `Don't save`,
+      confirmButtonText: 'Borrar',
+      denyButtonText: `No borrar`,
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        Swal.fire('Saved!', '', 'success');
+        this.usersService.deleteUserById(id).then(res =>{
+          if (res.error === undefined || res.error ===null){
+            Swal.fire('Se borro!', '', 'success')
+          }else{
+            Swal.fire('Error!', res.error, 'error')
+          } 
+          
+        })
       } else if (result.isDenied) {
-        Swal.fire('Changes are not saved', '', 'info');
+        Swal.fire('No se va a borrar', '', 'info');
       }
     });
   }
