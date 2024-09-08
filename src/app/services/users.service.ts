@@ -21,6 +21,21 @@ export class UsersService {
   async getUserById(id : number){
     const response = await fetch(this.url+'/'+id)
   }
+
+  async getUserFromList(id : number): Promise<UsersData | undefined>{
+    //como no funciona el servicio getUser/IDUSUARIO, 
+    const response = await fetch(this.url);
+    const data: ApiResponse = await response.json();
+
+    return await data.results.find(user => user.id ===id) ?? {};
+  }
+
+  async deleteUserById(id : number){
+    const response = await fetch(this.url+'/'+id,{
+      method : 'DELETE'
+    })
+    return await response.json();
+  }
 }
 
 interface ApiResponse {
