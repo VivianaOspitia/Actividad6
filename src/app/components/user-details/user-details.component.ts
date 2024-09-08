@@ -38,8 +38,7 @@ export class UserDetailsComponent {
             Swal.fire('Se borro!', '', 'success')
           }else{
             Swal.fire('Error!', res.error, 'error')
-          } 
-          
+          }    
         })
       } else if (result.isDenied) {
         Swal.fire('No se va a borrar', '', 'info');
