@@ -30,7 +30,17 @@ export class UsersService {
     return await data.results.find(user => user.id ===id) ?? {};
   }
 
+  async createUser(user : UsersData){
+    const response = await fetch(this.url,{
+      method : 'POST',
+      body: JSON.stringify(user)
+    })
+    return await response.json();
+
+  }
+
   async deleteUserById(id : number){
+    //el servicio user/IDUSUARIO, siempre devuelve el mismo mensaje
     const response = await fetch(this.url+'/'+id,{
       method : 'DELETE'
     })

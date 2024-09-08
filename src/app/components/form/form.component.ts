@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component,inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
+import { UsersService } from '../../services/users.service';
+import { UsersData } from '../../interfaces/users-data';
 
 @Component({
   selector: 'app-form',
@@ -10,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class FormComponent {
   modelForm: FormGroup;
+  usersService : UsersService = inject(UsersService);
 
   constructor(){
     this.modelForm = new FormGroup({
@@ -32,7 +36,18 @@ export class FormComponent {
   }
 
   getDataForm(){
-
+    const newUser : UsersData = {
+      id: 0,
+      first_name: this.modelForm.controls['name'].value,
+      last_name: this.modelForm.controls['lastname'].value,
+      username: this.modelForm.controls['name'].value + this.modelForm.controls['lastname'].value,
+      email: this.modelForm.controls['email'].value,
+      image: this.modelForm.controls['image'].value
+    };
+    this.usersService.createUser(newUser).then(res =>{
+      Swal.fire('Se creo!', res.id, 'success')
+    })
+    
   }
 
   checkControl(formControlName: string, validador: string){
