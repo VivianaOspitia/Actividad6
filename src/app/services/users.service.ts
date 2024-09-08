@@ -16,7 +16,10 @@ export class UsersService {
     const data: ApiResponse = await response.json();
 
     return await data.results ?? [];
+  }
 
+  async getUserById(id : number){
+    const response = await fetch(this.url+'/'+id)
   }
 }
 
